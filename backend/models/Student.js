@@ -4,8 +4,6 @@ const studentSchema = new mongoose.Schema({
   name: { type: String, required: true },
   leetcodeUsername: { type: String, required: true, unique: true },
   universityId: { type: String },
-  email: { type: String },
-  department: { type: String },
   batch: { type: String },
   easySolved: { type: Number, default: 0 },
   mediumSolved: { type: Number, default: 0 },
