@@ -87,8 +87,6 @@ exports.uploadStudents = async (req, res) => {
         name: String(name).trim(),
         leetcodeUsername: normalizeUsername(rawUser),
         universityId: getVal(row, ['universityid', 'roll', 'rollno', 'rollnumber']) || '',
-        email: getVal(row, ['email']) || '',
-        department: getVal(row, ['department', 'dept']) || '',
         batch: displayBatch || (getVal(row, ['batch', 'year']) || '')
       });
     }
@@ -128,8 +126,6 @@ exports.uploadStudents = async (req, res) => {
           $set: {
             name: d.name,
             universityId: d.universityId,
-            email: d.email,
-            department: d.department,
             batch: d.batch, // selected year wins
             easySolved: d.easySolved,
             mediumSolved: d.mediumSolved,
