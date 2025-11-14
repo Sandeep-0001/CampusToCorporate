@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
-const API = axios.create({ baseURL: `${API_BASE}/api/students`, timeout: 120000 }); // 120s timeout
+const API = axios.create({ baseURL: `${API_BASE}/api/students`}); // 120s timeout
 
 export const uploadStudents = async (file, year) => {
   const fd = new FormData();
