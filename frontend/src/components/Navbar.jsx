@@ -20,7 +20,7 @@ export default function Navbar() {
               Leaderboard
             </NavLink>
             <NavLink
-              to="/contest"
+              to="https://contest-board.vercel.app"
               className={({ isActive }) => `transition-colors ${isActive ? 'text-cyan-300' : 'text-slate-300 hover:text-cyan-300'}`}
             >
               Contests
