@@ -53,8 +53,9 @@ const fetchLeetCodeStats = async (username) => {
       contestRating: rating || 0
     };
   } catch (e) {
-    console.error('LeetCode fetch error:', e.message);
-    return { easySolved: 0, mediumSolved: 0, hardSolved: 0, contestRating: 0 };
+    console.error('LeetCode fetch error for user', username, '-', e?.response?.status || '', e.message || e);
+    // Return null to signal failure so callers can decide whether to keep existing stats
+    return null;
   }
 };
 

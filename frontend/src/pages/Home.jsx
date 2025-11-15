@@ -87,7 +87,7 @@ export default function Home() {
               <p className="text-slate-400">Track LeetCode performance and upcoming contests for your entire university.</p>
               <div className="flex gap-2 pt-1">
                 <NavLink to="/leaderboard" className="px-3 py-1.5 rounded-md bg-cyan-500 text-slate-950 text-[0.7rem] font-medium hover:bg-cyan-400">Leaderboard</NavLink>
-                <NavLink to="/contest" className="px-3 py-1.5 rounded-md border border-slate-600 text-slate-100 text-[0.7rem] hover:border-cyan-400">Contests</NavLink>
+                <NavLink to="https://contest-board.vercel.app" className="px-3 py-1.5 rounded-md border border-slate-600 text-slate-100 text-[0.7rem] hover:border-cyan-400">Contests</NavLink>
               </div>
             </div>
 

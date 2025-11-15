@@ -99,19 +99,29 @@ exports.uploadStudents = async (req, res) => {
       });
     }
 
-    // Fetch stats in sequence to avoid rate issues; tolerate failures
+    // Fetch stats in sequence to avoid rate issues; tolerate failures.
+    // If LeetCode fetch fails for a user, we keep their stats as-is (or 0 on first insert).
     for (const d of docs) {
       try {
         const stats = await fetchLeetCodeStats(d.leetcodeUsername);
-        d.easySolved = stats.easySolved;
-        d.mediumSolved = stats.mediumSolved;
-        d.hardSolved = stats.hardSolved;
-        d.contestRating = stats.contestRating;
-      } catch (_) {
-        d.easySolved = d.easySolved || 0;
-        d.mediumSolved = d.mediumSolved || 0;
-        d.hardSolved = d.hardSolved || 0;
-        d.contestRating = d.contestRating || 0;
+        if (stats) {
+          d.easySolved = stats.easySolved;
+          d.mediumSolved = stats.mediumSolved;
+          d.hardSolved = stats.hardSolved;
+          d.contestRating = stats.contestRating;
+        } else {
+          // stats == null -> fetch failed; do not forcibly set 0 here
+          d.easySolved = d.easySolved ?? 0;
+          d.mediumSolved = d.mediumSolved ?? 0;
+          d.hardSolved = d.hardSolved ?? 0;
+          d.contestRating = d.contestRating ?? 0;
+        }
+      } catch (e) {
+        console.error('UploadStudents: failed to fetch stats for', d.leetcodeUsername, e?.message || e);
+        d.easySolved = d.easySolved ?? 0;
+        d.mediumSolved = d.mediumSolved ?? 0;
+        d.hardSolved = d.hardSolved ?? 0;
+        d.contestRating = d.contestRating ?? 0;
       }
       d.lastUpdated = new Date();
     }
@@ -172,7 +182,15 @@ exports.refreshStudent = async (req, res) => {
   try {
     const student = await Student.findById(req.params.id);
     if (!student) return res.status(404).json({ message: 'Student not found' });
+
     const stats = await fetchLeetCodeStats(student.leetcodeUsername);
+    if (!stats) {
+      return res.status(502).json({
+        message: 'Failed to refresh from LeetCode. Existing stats kept.',
+        student
+      });
+    }
+
     student.easySolved = stats.easySolved;
     student.mediumSolved = stats.mediumSolved;
     student.hardSolved = stats.hardSolved;
@@ -189,7 +207,7 @@ exports.refreshStudent = async (req, res) => {
 exports.refreshAll = async (_req, res) => {
   try {
     const students = await Student.find({});
-    const concurrency = 5;
+    const concurrency = 10;
     let updated = 0;
     let failed = 0;
     for (let i = 0; i < students.length; i += concurrency) {
@@ -197,6 +215,10 @@ exports.refreshAll = async (_req, res) => {
       const results = await Promise.allSettled(
         chunk.map(async (s) => {
           const stats = await fetchLeetCodeStats(s.leetcodeUsername);
+          if (!stats) {
+            console.warn('refreshAll: failed to fetch stats for', s.leetcodeUsername);
+            return false;
+          }
           s.easySolved = stats.easySolved;
           s.mediumSolved = stats.mediumSolved;
           s.hardSolved = stats.hardSolved;
@@ -207,7 +229,7 @@ exports.refreshAll = async (_req, res) => {
         })
       );
       results.forEach((r) => {
-        if (r.status === 'fulfilled') updated += 1;
+        if (r.status === 'fulfilled' && r.value === true) updated += 1;
         else failed += 1;
       });
     }

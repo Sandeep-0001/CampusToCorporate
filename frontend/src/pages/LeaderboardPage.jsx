@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getLeaderboard, uploadStudents, refreshAll as refreshAllApi } from '../services/api';
+import { getLeaderboard, uploadStudents, refreshAll as refreshAllApi, refreshStudentStats } from '../services/api';
 import FileUpload from '../components/FileUpload.jsx';
 import Leaderboard from '../components/Leaderboard.jsx';
 
@@ -8,6 +8,7 @@ export default function LeaderboardPage() {
   const [loading, setLoading] = useState(false);
   const [yearFilter, setYearFilter] = useState('2'); // 2 | 3 | 4
   const [searchQuery, setSearchQuery] = useState('');
+  const [refreshAllLoading, setRefreshAllLoading] = useState(false);
 
   const load = async () => {
     setLoading(true);
@@ -27,12 +28,25 @@ export default function LeaderboardPage() {
   };
 
   const handleRefreshAll = () => {
+    setRefreshAllLoading(true);
     try {
       refreshAllApi().catch(() => {});
     } catch (_) {
       // ignore
     }
-    setTimeout(() => { load(); }, 5000);
+    setTimeout(() => {
+      load().finally(() => setRefreshAllLoading(false));
+    }, 5000);
+  };
+
+  const handleRefreshStudent = async (id) => {
+    if (!id) return;
+    try {
+      await refreshStudentStats(id);
+    } catch (_) {
+      // ignore errors here; backend already keeps existing stats on failure
+    }
+    await load();
   };
 
   const deriveYear = (s) => {
@@ -148,16 +162,21 @@ export default function LeaderboardPage() {
             <div className="flex justify-end">
               <button
                 onClick={handleRefreshAll}
-                className="px-3 py-1.5 rounded-md bg-emerald-600/20 text-emerald-300 hover:bg-emerald-600/30 border border-transparent"
+                disabled={refreshAllLoading}
+                className={`px-3 py-1.5 rounded-md border border-transparent inline-flex items-center gap-2 ${
+                  refreshAllLoading
+                    ? 'bg-emerald-500/30 text-emerald-100 animate-pulse cursor-default'
+                    : 'bg-emerald-600/20 text-emerald-300 hover:bg-emerald-600/30'
+                }`}
                 title="Refresh all students' LeetCode stats in background"
               >
-                Refresh All
+                {refreshAllLoading ? 'Refreshing…' : 'Refresh All'}
               </button>
             </div>
             {loading ? (
               <div className="rounded-xl border border-slate-700 bg-slate-800 p-6 text-sm text-slate-300">Loading...</div>
             ) : (
-              <Leaderboard data={filteredData} />
+              <Leaderboard data={filteredData} onRefreshStudent={handleRefreshStudent} />
             )}
           </div>
           <aside className="space-y-4">

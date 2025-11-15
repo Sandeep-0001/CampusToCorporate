@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function Leaderboard({ data }) {
+export default function Leaderboard({ data, onRefreshStudent }) {
   const formatLastSubmit = (dt) => {
     if (!dt) return '-';
     const d = new Date(dt);
@@ -54,7 +54,13 @@ export default function Leaderboard({ data }) {
                   target="_blank"
                   rel="noreferrer"
                   className="text-cyan-300 hover:underline"
-                  title={`Open ${s.leetcodeUsername} on LeetCode`}
+                  title={`Open ${s.leetcodeUsername} on LeetCode (also refresh stats)`}
+                  onClick={() => {
+                    if (onRefreshStudent && s._id) {
+                      // Fire and forget; do not block navigation
+                      onRefreshStudent(s._id);
+                    }
+                  }}
                 >
                   {s.name}
                 </a>
