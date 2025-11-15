@@ -27,7 +27,7 @@ export default function Home() {
                 View Leaderboard
               </NavLink>
               <NavLink
-                to="/contest"
+                to="https://contest-board.vercel.app"
                 className="inline-flex items-center justify-center rounded-md border border-slate-600 bg-slate-900/60 px-4 py-2.5 text-sm font-medium text-slate-100 hover:border-cyan-400 hover:text-cyan-200"
               >
                 Explore Contests
