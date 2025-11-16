@@ -96,8 +96,8 @@ export default function Home() {
               <h3 className="text-sm font-semibold text-slate-50">Code Analyser & Similar Qs</h3>
               <p className="text-slate-400">Analyse code, find patterns in mistakes, and suggest similar LeetCode questions.</p>
               <div className="flex gap-2 pt-1">
-                <NavLink to="/code-analyser" className="px-3 py-1.5 rounded-md bg-emerald-500 text-slate-950 text-[0.7rem] font-medium hover:bg-emerald-400">Code Analyser</NavLink>
-                <NavLink to="/similar-questions" className="px-3 py-1.5 rounded-md border border-slate-600 text-slate-100 text-[0.7rem] hover:border-emerald-300">Similar Qs</NavLink>
+                <NavLink to="https://code-analyser-beta.vercel.app" className="px-3 py-1.5 rounded-md bg-emerald-500 text-slate-950 text-[0.7rem] font-medium hover:bg-emerald-400">Code Analyser</NavLink>
+                <NavLink to="https://similar-question-search.vercel.app" className="px-3 py-1.5 rounded-md border border-slate-600 text-slate-100 text-[0.7rem] hover:border-emerald-300">Similar Qs</NavLink>
               </div>
             </div>
 
@@ -106,9 +106,9 @@ export default function Home() {
               <h3 className="text-sm font-semibold text-slate-50">Notes, PYQs & Company Sheets</h3>
               <p className="text-slate-400">Central library for notes, previous year questions, and company-wise preparation sheets.</p>
               <div className="flex flex-wrap gap-2 pt-1">
-                <NavLink to="/notes" className="px-3 py-1.5 rounded-md border border-slate-600 text-slate-100 text-[0.7rem] hover:border-amber-300">Notes</NavLink>
-                <NavLink to="/pyqs" className="px-3 py-1.5 rounded-md border border-slate-600 text-slate-100 text-[0.7rem] hover:border-amber-300">PYQs</NavLink>
-                <NavLink to="/company-sheets" className="px-3 py-1.5 rounded-md border border-slate-600 text-slate-100 text-[0.7rem] hover:border-amber-300">Company Sheets</NavLink>
+                <NavLink to="https://gla-notes.vercel.app" className="px-3 py-1.5 rounded-md border border-slate-600 text-slate-100 text-[0.7rem] hover:border-amber-300">Notes</NavLink>
+                
+                <NavLink to="https://companywise-sheet.vercel.app" className="px-3 py-1.5 rounded-md border border-slate-600 text-slate-100 text-[0.7rem] hover:border-amber-300">Company Sheets</NavLink>
               </div>
             </div>
           </div>
