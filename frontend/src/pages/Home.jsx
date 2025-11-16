@@ -21,7 +21,7 @@ export default function Home() {
             </p>
             <div className="flex flex-wrap items-center gap-4 pt-2">
               <NavLink
-                to="/leaderboard"
+                to="https://campus-to-corporate.vercel.app/leaderboard"
                 className="inline-flex items-center justify-center rounded-md bg-cyan-500 px-4 py-2.5 text-sm font-medium text-slate-950 shadow-sm hover:bg-cyan-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900"
               >
                 View Leaderboard
