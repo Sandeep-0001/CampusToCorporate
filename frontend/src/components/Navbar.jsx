@@ -14,7 +14,7 @@ export default function Navbar() {
           </NavLink>
           <div className="hidden md:flex items-center gap-4 text-xs md:text-sm">
             <NavLink
-              to="/leaderboard"
+              to="https://campus-to-corporate.vercel.app/leaderboard"
               className={({ isActive }) => `transition-colors ${isActive ? 'text-cyan-300' : 'text-slate-300 hover:text-cyan-300'}`}
             >
               Leaderboard
