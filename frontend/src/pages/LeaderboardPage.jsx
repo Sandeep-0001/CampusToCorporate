@@ -182,6 +182,10 @@ export default function LeaderboardPage() {
           <aside className="space-y-4">
             <div className="rounded-xl border border-slate-700 bg-slate-800 p-4">
               <FileUpload onUpload={handleUpload} />
+              <div className="mt-3 text-xs text-slate-400 space-y-1">
+                <p>Include columns: <span className="font-medium text-slate-200">name, rollNumber, leetcodeUsername, year (2/3/4)</span>.</p>
+                <p>Download CSV Template and then use Upload Students.</p>
+              </div>
             </div>
           </aside>
           <aside className="space-y-4">
