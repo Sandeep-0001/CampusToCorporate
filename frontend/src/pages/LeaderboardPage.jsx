@@ -184,6 +184,23 @@ export default function LeaderboardPage() {
               <FileUpload onUpload={handleUpload} />
             </div>
           </aside>
+          <aside className="space-y-4">
+            <div className="rounded-xl border border-slate-700 bg-slate-800 p-4 space-y-3">
+              <p className="text-sm text-slate-200 font-medium">ID not showing in the leaderboard?</p>
+              <p className="text-xs text-slate-400">
+                If your student ID is not present in the leaderboard, please submit your details using the form
+                below. After submission, your ID will be considered for addition to the leaderboard.
+              </p>
+              <a
+                href="https://forms.visme.co/formsPlayer/op6r4gn1-application-form"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium rounded-md bg-cyan-600 text-white hover:bg-cyan-500 transition-colors"
+              >
+                Submit your ID
+              </a>
+            </div>
+          </aside>
         </div>
       </main>
     </div>
