@@ -6,7 +6,7 @@ import Leaderboard from '../components/Leaderboard.jsx';
 export default function LeaderboardPage() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [yearFilter, setYearFilter] = useState('2'); // 2 | 3 | 4
+  const [yearFilter, setYearFilter] = useState('3'); // 2 | 3 | 4
   const [searchQuery, setSearchQuery] = useState('');
   const [refreshAllLoading, setRefreshAllLoading] = useState(false);
 
