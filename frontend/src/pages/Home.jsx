@@ -16,7 +16,7 @@ export default function Home() {
               <span className="block text-cyan-300">coding practice & corporate-ready talent.</span>
             </h1>
             <p className="text-sm md:text-base text-slate-300 max-w-xl">
-              CampusToCorporate is a single hub for your university coding ecosystem: LeetCode leaderboard, upcoming contests,
+              CampusToCorporate is a single hub for your university coding ecosystem: LeetCode leaderboard, upcoming contests, Resume builder & optimizer,
               code analysis, similar questions, notes, PYQs, and company-wise preparation sheets.
             </p>
             <div className="flex flex-wrap items-center gap-4 pt-2">
@@ -32,6 +32,7 @@ export default function Home() {
               >
                 Explore Contests
               </NavLink>
+             
             </div>
             <div className="flex flex-wrap gap-6 pt-3 text-xs text-slate-400">
               <div>
@@ -92,25 +93,35 @@ export default function Home() {
             </div>
 
             <div className="rounded-xl border border-slate-700 bg-slate-900/70 p-4 space-y-2">
-              <p className="text-[0.7rem] font-semibold text-emerald-300 uppercase tracking-[0.18em]">Practice Intelligence</p>
+              <p className="text-[0.7rem] font-semibold text-emerald-300 uppercase tracking-[0.18em]">Resume Tools</p>
+              <h3 className="text-sm font-semibold text-slate-50">Resume Builder & Optimizer</h3>
+              <p className="text-slate-400">Create and optimize resumes tailored for your dream job.</p>
+              <div className="flex gap-2 pt-1">
+                <NavLink to="https://resumegenieai.vercel.app" className="px-3 py-1.5 rounded-md bg-emerald-500 text-slate-950 text-[0.7rem] font-medium hover:bg-emerald-400">Resume Builder</NavLink>
+                <NavLink to="https://resumegenie-ai.vercel.app" className="px-3 py-1.5 rounded-md border border-slate-600 text-slate-100 text-[0.7rem] hover:border-emerald-300">Resume Optimizer</NavLink>
+              </div>
+            </div>
+             <div className="rounded-xl border border-slate-600 bg-slate-800/80 p-4 space-y-2">
+              <p className="text-[0.7rem] font-semibold text-blue-300 uppercase tracking-[0.18em]">Practice Intelligence</p>
               <h3 className="text-sm font-semibold text-slate-50">Code Analyser & Similar Qs</h3>
               <p className="text-slate-400">Analyse code, find patterns in mistakes, and suggest similar LeetCode questions.</p>
               <div className="flex gap-2 pt-1">
-                <NavLink to="https://code-analyser-beta.vercel.app" className="px-3 py-1.5 rounded-md bg-emerald-500 text-slate-950 text-[0.7rem] font-medium hover:bg-emerald-400">Code Analyser</NavLink>
-                <NavLink to="https://similar-question-search.vercel.app" className="px-3 py-1.5 rounded-md border border-slate-600 text-slate-100 text-[0.7rem] hover:border-emerald-300">Similar Qs</NavLink>
+                <NavLink to="https://code-analyser-beta.vercel.app" className="px-3 py-1.5 rounded-md bg-blue-500 text-slate-950 text-[0.7rem] font-medium hover:bg-blue-400">Code Analyser</NavLink>
+                <NavLink to="https://similar-question-search.vercel.app" className="px-3 py-1.5 rounded-md border border-slate-500 text-slate-100 text-[0.7rem] hover:border-blue-300">Similar Qs</NavLink>
               </div>
             </div>
-
+            
             <div className="rounded-xl border border-slate-700 bg-slate-900/70 p-4 space-y-2">
               <p className="text-[0.7rem] font-semibold text-amber-300 uppercase tracking-[0.18em]">Study Material</p>
               <h3 className="text-sm font-semibold text-slate-50">Notes, PYQs & Company Sheets</h3>
               <p className="text-slate-400">Central library for notes, previous year questions, and company-wise preparation sheets.</p>
               <div className="flex flex-wrap gap-2 pt-1">
                 <NavLink to="https://gla-notes.vercel.app" className="px-3 py-1.5 rounded-md border border-slate-600 text-slate-100 text-[0.7rem] hover:border-amber-300">Notes</NavLink>
-                
                 <NavLink to="https://companywise-sheet.vercel.app" className="px-3 py-1.5 rounded-md border border-slate-600 text-slate-100 text-[0.7rem] hover:border-amber-300">Company Sheets</NavLink>
               </div>
             </div>
+
+           
           </div>
         </section>
       </main>
