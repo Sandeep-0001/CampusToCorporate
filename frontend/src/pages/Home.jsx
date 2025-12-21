@@ -116,7 +116,7 @@ export default function Home() {
               <h3 className="text-sm font-semibold text-slate-50">Notes, PYQs & Company Sheets</h3>
               <p className="text-slate-400">Central library for notes, previous year questions, and company-wise preparation sheets.</p>
               <div className="flex flex-wrap gap-2 pt-1">
-                <NavLink to="https://gla-notes.vercel.app" className="px-3 py-1.5 rounded-md border  bg-amber-300 border-slate-600 text-slate-100 text-[0.7rem] hover:border-amber-300">Notes</NavLink>
+                <NavLink to="https://gla-notes.vercel.app" className="px-3 py-1.5 rounded-md border  bg-amber-300 border-slate-600 text-slate-950 text-[0.7rem] hover:border-amber-300">Notes</NavLink>
                 <NavLink to="https://companywise-sheet.vercel.app" className="px-3 py-1.5 rounded-md border border-slate-600 text-slate-100 text-[0.7rem] hover:border-amber-300">Company Sheets</NavLink>
               </div>
             </div>
