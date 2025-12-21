@@ -1,5 +1,6 @@
 const Student = require('../models/Student');
 const { fetchLeetCodeStats } = require('../services/leetcode');
+const { makeKey, getCached, setCached, invalidateLeaderboardCache } = require('../services/leaderboardCache');
 const xlsx = require('xlsx');
 
 // Normalize a LeetCode identifier (username or profile URL) to a plain username
@@ -27,6 +28,15 @@ function normalizeUsername(value) {
       .trim();
     return stripped;
   }
+}
+
+function normalizeYearLevel(raw) {
+  const s = (raw || '').toString().toLowerCase();
+  if (!s) return '';
+  if (/(^|\b)(2|2nd|second)\b/.test(s)) return '2';
+  if (/(^|\b)(3|3rd|third)\b/.test(s)) return '3';
+  if (/(^|\b)(4|4th|fourth)\b/.test(s)) return '4';
+  return '';
 }
 
 // Normalize object keys: lowercased, remove non-alphanumeric
@@ -87,7 +97,8 @@ exports.uploadStudents = async (req, res) => {
         name: String(name).trim(),
         leetcodeUsername: normalizeUsername(rawUser),
         universityId: getVal(row, ['universityid', 'roll', 'rollno', 'rollnumber']) || '',
-        batch: displayBatch || (getVal(row, ['batch', 'year']) || '')
+        batch: displayBatch || (getVal(row, ['batch', 'year']) || ''),
+        yearLevel: selectedYear || normalizeYearLevel(getVal(row, ['batch', 'year']))
       });
     }
 
@@ -130,6 +141,7 @@ exports.uploadStudents = async (req, res) => {
     let inserted = 0;
     let updated = 0;
     for (const d of docs) {
+      const totalSolved = (Number(d.easySolved) || 0) + (Number(d.mediumSolved) || 0) + (Number(d.hardSolved) || 0);
       const resUpsert = await Student.updateOne(
         { leetcodeUsername: d.leetcodeUsername },
         {
@@ -137,9 +149,11 @@ exports.uploadStudents = async (req, res) => {
             name: d.name,
             universityId: d.universityId,
             batch: d.batch, // selected year wins
+            yearLevel: d.yearLevel || undefined,
             easySolved: d.easySolved,
             mediumSolved: d.mediumSolved,
             hardSolved: d.hardSolved,
+            totalSolved,
             contestRating: d.contestRating,
             lastUpdated: d.lastUpdated
           }
@@ -150,6 +164,7 @@ exports.uploadStudents = async (req, res) => {
       else if (resUpsert.modifiedCount && resUpsert.modifiedCount > 0) updated += 1;
       else updated += 0; // no change
     }
+    invalidateLeaderboardCache();
     const skipped = docs.length - (inserted + updated);
     return res.status(201).json({ message: `Inserted ${inserted}, updated ${updated}`, inserted, updated, skipped, year: selectedYear || undefined });
   } catch (err) {
@@ -159,19 +174,84 @@ exports.uploadStudents = async (req, res) => {
 };
 
 // GET /api/students/leaderboard
-exports.getLeaderboard = async (_req, res) => {
+exports.getLeaderboard = async (req, res) => {
   try {
-    const students = await Student.find({}).lean();
-    const enriched = students.map(s => ({
-      ...s,
-      totalSolved: (s.easySolved || 0) + (s.mediumSolved || 0) + (s.hardSolved || 0)
-    }));
-    enriched.sort((a, b) => {
-      if (b.totalSolved !== a.totalSolved) return b.totalSolved - a.totalSolved;
-      return (b.contestRating || 0) - (a.contestRating || 0);
-    });
-    const ranked = enriched.map((s, i) => ({ rank: i + 1, ...s }));
-    return res.json(ranked);
+    const year = (req.query?.year || '').toString().trim(); // '2' | '3' | '4'
+    const q = (req.query?.q || '').toString().trim();
+    const hasPagination = req.query?.page != null || req.query?.limit != null;
+    const page = Math.max(1, Number(req.query?.page || 1));
+    const limit = Math.min(10_000, Math.max(1, Number(req.query?.limit || 50)));
+    const skip = (page - 1) * limit;
+
+    const filter = {};
+    if (year) {
+      // Prefer normalized field for performance.
+      filter.yearLevel = year;
+    }
+    if (q) {
+      const escaped = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      filter.name = { $regex: escaped, $options: 'i' };
+    }
+
+    // Backwards compatibility:
+    // - If client does NOT pass page/limit, return the legacy array response.
+    // - If page/limit are present, return the new paginated contract.
+    if (!hasPagination) {
+      const students = await Student.find(filter)
+        .sort({ totalSolved: -1, hardSolved: -1, contestRating: -1 })
+        .select({
+          name: 1,
+          leetcodeUsername: 1,
+          universityId: 1,
+          batch: 1,
+          yearLevel: 1,
+          easySolved: 1,
+          mediumSolved: 1,
+          hardSolved: 1,
+          totalSolved: 1,
+          contestRating: 1,
+        })
+        .lean();
+      const ranked = students.map((s, i) => ({ rank: i + 1, ...s }));
+      // Override global no-store for this endpoint only; safe because data is not user-specific.
+      res.setHeader('Cache-Control', 'public, max-age=30, stale-while-revalidate=30');
+      return res.json(ranked);
+    }
+
+    const cacheKey = makeKey({ year, page, limit, q });
+    const cached = getCached(cacheKey);
+    if (cached) return res.json(cached);
+
+    const projection = {
+      name: 1,
+      leetcodeUsername: 1,
+      universityId: 1,
+      batch: 1,
+      yearLevel: 1,
+      easySolved: 1,
+      mediumSolved: 1,
+      hardSolved: 1,
+      totalSolved: 1,
+      contestRating: 1,
+    };
+
+    const [total, items] = await Promise.all([
+      Student.countDocuments(filter),
+      Student.find(filter)
+        .sort({ totalSolved: -1, hardSolved: -1, contestRating: -1 })
+        .skip(skip)
+        .limit(limit)
+        .select(projection)
+        .lean(),
+    ]);
+
+    const rankedItems = items.map((s, i) => ({ rank: skip + i + 1, ...s }));
+    const payload = { data: rankedItems, total, page, limit };
+
+    // TTL keeps results snappy while staying reasonably fresh.
+    setCached(cacheKey, payload, 120_000);
+    res.setHeader('Cache-Control', 'public, max-age=30, stale-while-revalidate=30');
+    return res.json(payload);
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }
@@ -194,9 +274,11 @@ exports.refreshStudent = async (req, res) => {
     student.easySolved = stats.easySolved;
     student.mediumSolved = stats.mediumSolved;
     student.hardSolved = stats.hardSolved;
+    student.totalSolved = (stats.easySolved || 0) + (stats.mediumSolved || 0) + (stats.hardSolved || 0);
     student.contestRating = stats.contestRating;
     student.lastUpdated = new Date();
     await student.save();
+    invalidateLeaderboardCache();
     return res.json({ message: 'Updated', student });
   } catch (err) {
     return res.status(500).json({ message: err.message });
@@ -222,6 +304,7 @@ exports.refreshAll = async (_req, res) => {
           s.easySolved = stats.easySolved;
           s.mediumSolved = stats.mediumSolved;
           s.hardSolved = stats.hardSolved;
+          s.totalSolved = (stats.easySolved || 0) + (stats.mediumSolved || 0) + (stats.hardSolved || 0);
           s.contestRating = stats.contestRating;
           s.lastUpdated = new Date();
           await s.save();
@@ -233,6 +316,7 @@ exports.refreshAll = async (_req, res) => {
         else failed += 1;
       });
     }
+    invalidateLeaderboardCache();
     return res.json({ message: `Refreshed ${updated} students`, updated, failed, total: students.length });
   } catch (err) {
     return res.status(500).json({ message: err.message });

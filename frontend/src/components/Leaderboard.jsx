@@ -1,6 +1,49 @@
-import React from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 export default function Leaderboard({ data, onRefreshStudent }) {
+  const scrollRef = useRef(null);
+  const [scrollTop, setScrollTop] = useState(0);
+  const [viewportHeight, setViewportHeight] = useState(600);
+
+  // Virtualization (keeps "All" fast): render only visible rows.
+  const enableVirtual = Array.isArray(data) && data.length > 300;
+  const rowHeight = 44;
+  const overscan = 15;
+
+  useEffect(() => {
+    if (!enableVirtual) return;
+    const el = scrollRef.current;
+    if (!el) return;
+    const update = () => setViewportHeight(el.clientHeight || 600);
+    update();
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
+  }, [enableVirtual]);
+
+  const { startIndex, endIndex, topSpacer, bottomSpacer, visibleRows } = useMemo(() => {
+    if (!enableVirtual) {
+      return {
+        startIndex: 0,
+        endIndex: (data?.length || 0) - 1,
+        topSpacer: 0,
+        bottomSpacer: 0,
+        visibleRows: data || [],
+      };
+    }
+    const total = data.length;
+    const start = Math.max(0, Math.floor(scrollTop / rowHeight) - overscan);
+    const capacity = Math.ceil(viewportHeight / rowHeight) + overscan * 2;
+    const end = Math.min(total - 1, start + capacity - 1);
+    const top = start * rowHeight;
+    const bottom = Math.max(0, (total - end - 1) * rowHeight);
+    return {
+      startIndex: start,
+      endIndex: end,
+      topSpacer: top,
+      bottomSpacer: bottom,
+      visibleRows: data.slice(start, end + 1),
+    };
+  }, [data, enableVirtual, scrollTop, viewportHeight]);
   const formatLastSubmit = (dt) => {
     if (!dt) return '-';
     const d = new Date(dt);
@@ -22,16 +65,23 @@ export default function Leaderboard({ data, onRefreshStudent }) {
 
   const rankBadge = (rank) => {
     const base = 'inline-flex items-center justify-center w-7 h-7 rounded-full text-xs font-semibold tabular-nums';
-    if (rank === 1) return <span className={`${base} bg-gradient-to-br from-yellow-300 to-yellow-500 text-black`}>1</span>;
-    if (rank === 2) return <span className={`${base} bg-gradient-to-br from-gray-200 to-gray-400 text-black`}>2</span>;
-    if (rank === 3) return <span className={`${base} bg-gradient-to-br from-amber-300 to-amber-500 text-black`}>3</span>;
+    if (rank === 1) return <span className={`${base} bg-linear-to-br from-yellow-300 to-yellow-500 text-black`}>1</span>;
+    if (rank === 2) return <span className={`${base} bg-linear-to-br from-gray-200 to-gray-400 text-black`}>2</span>;
+    if (rank === 3) return <span className={`${base} bg-linear-to-br from-amber-300 to-amber-500 text-black`}>3</span>;
     return <span className={`${base} bg-slate-900/70 border border-slate-700 text-slate-100/90`}>{rank}</span>;
   };
 
   return (
-    <div className="overflow-x-auto rounded-lg border border-slate-700 bg-slate-800">
+    <div
+      ref={scrollRef}
+      onScroll={(e) => {
+        if (!enableVirtual) return;
+        setScrollTop(e.currentTarget.scrollTop);
+      }}
+      className={`rounded-lg border border-slate-700 bg-slate-800 ${enableVirtual ? 'max-h-[70vh] overflow-auto' : 'overflow-x-auto'}`}
+    >
       <table className="min-w-full text-sm">
-        <thead className="bg-slate-900/80 sticky top-0 z-10 backdrop-blur supports-[backdrop-filter]:bg-slate-900/60">
+        <thead className="bg-slate-900/80 sticky top-0 z-10 backdrop-blur supports-backdrop-filter:bg-slate-900/60">
           <tr className="border-b border-slate-700/80">
             <th className="px-4 py-3 text-left font-semibold">Rank</th>
             <th className="px-4 py-3 text-left font-semibold">Roll No.</th>
@@ -44,9 +94,15 @@ export default function Leaderboard({ data, onRefreshStudent }) {
           </tr>
         </thead>
         <tbody>
-          {data.map((s, i) => (
+          {enableVirtual && topSpacer > 0 ? (
+            <tr aria-hidden>
+              <td colSpan={8} style={{ height: topSpacer }} />
+            </tr>
+          ) : null}
+
+          {visibleRows.map((s, i) => (
             <tr key={s._id || s.rollNumber || i} className="odd:bg-white/5 hover:bg-cyan-600/10 transition-colors">
-              <td className="px-4 py-3 text-left">{rankBadge(i + 1)}</td>
+              <td className="px-4 py-3 text-left">{rankBadge(Number(s.rank) || (i + 1))}</td>
               <td className="px-4 py-3 text-left tabular-nums font-mono">{s.universityId ? String(s.universityId) : (s.rollNumber || s.roll || s.rollNo || '-')}</td>
               <td className="px-4 py-3">
                 <a
@@ -72,6 +128,12 @@ export default function Leaderboard({ data, onRefreshStudent }) {
               <td className="px-4 py-3 text-right tabular-nums text-cyan-500">{s.contestRating?.toFixed ? s.contestRating.toFixed(2) : s.contestRating}</td>
             </tr>
           ))}
+
+          {enableVirtual && bottomSpacer > 0 ? (
+            <tr aria-hidden>
+              <td colSpan={8} style={{ height: bottomSpacer }} />
+            </tr>
+          ) : null}
         </tbody>
       </table>
     </div>

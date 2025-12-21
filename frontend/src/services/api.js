@@ -11,8 +11,17 @@ export const uploadStudents = async (file, year) => {
   return data;
 };
 
-export const getLeaderboard = async () => {
-  const { data } = await API.get('/leaderboard', { params: { t: Date.now() } });
+export const getLeaderboard = async (opts = {}) => {
+  const { year, page, limit, q } = opts || {};
+  const { data } = await API.get('/leaderboard', {
+    params: {
+      t: Date.now(),
+      year,
+      page: page ?? 1,
+      limit: limit ?? 50,
+      q,
+    }
+  });
   return data;
 };
 

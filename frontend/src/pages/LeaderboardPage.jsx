@@ -9,22 +9,50 @@ export default function LeaderboardPage() {
   const [yearFilter, setYearFilter] = useState('3'); // 2 | 3 | 4
   const [searchQuery, setSearchQuery] = useState('');
   const [refreshAllLoading, setRefreshAllLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(50);
+  const [total, setTotal] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
 
-  const load = async () => {
+  const load = async ({ nextPage } = {}) => {
     setLoading(true);
     try {
-      const res = await getLeaderboard();
-      setData(res);
+      const isAll = Number(limit) >= 10_000;
+      const targetPage = isAll ? 1 : (nextPage || page);
+      const res = await getLeaderboard({ year: yearFilter, page: targetPage, limit, q: searchQuery.trim() });
+      setData(res?.data || []);
+      setTotal(Number(res?.total) || 0);
+      setTotalPages(Math.max(1, Math.ceil((Number(res?.total) || 0) / limit)));
+      setPage(Number(res?.page) || targetPage);
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => {
+    setPage(1);
+    load({ nextPage: 1 });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [yearFilter]);
+
+  useEffect(() => {
+    setPage(1);
+    load({ nextPage: 1 });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [limit]);
+
+  useEffect(() => {
+    const t = setTimeout(() => {
+      setPage(1);
+      load({ nextPage: 1 });
+    }, 300);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchQuery]);
 
   const handleUpload = async (file) => {
     await uploadStudents(file, yearFilter);
-    await load();
+    await load({ nextPage: 1 });
   };
 
   const handleRefreshAll = () => {
@@ -35,7 +63,7 @@ export default function LeaderboardPage() {
       // ignore
     }
     setTimeout(() => {
-      load().finally(() => setRefreshAllLoading(false));
+      load({ nextPage: 1 }).finally(() => setRefreshAllLoading(false));
     }, 5000);
   };
 
@@ -46,32 +74,13 @@ export default function LeaderboardPage() {
     } catch (_) {
       // ignore errors here; backend already keeps existing stats on failure
     }
-    await load();
+    await load({ nextPage: page });
   };
 
-  const deriveYear = (s) => {
-    const raw = (s?.batch || s?.year || '').toString().toLowerCase();
-    if (!raw) return null;
-    if (/(^|\b)(2|2nd|second)\b/.test(raw)) return '2';
-    if (/(^|\b)(3|3rd|third)\b/.test(raw)) return '3';
-    if (/(^|\b)(4|4th|fourth)\b/.test(raw)) return '4';
-    return null;
-  };
-
-  const shownData = data.filter((s) => {
-    const y = deriveYear(s);
-    return y === yearFilter;
-  });
-
-  const filteredData = shownData.filter((s) => {
-    const q = searchQuery.trim().toLowerCase();
-    if (!q) return true;
-    const name = (s?.name || '').toString().toLowerCase();
-    return name.includes(q);
-  });
+  const filteredData = data;
 
   const totals = {
-    students: filteredData.length,
+    students: total,
     solved: filteredData.reduce((a, b) => a + (Number(b.totalSolved) || 0), 0),
     ratingAvg: (() => {
       const ratings = filteredData.map((s) => Number(s.contestRating)).filter((n) => !Number.isNaN(n));
@@ -172,6 +181,39 @@ export default function LeaderboardPage() {
               >
                 {refreshAllLoading ? 'Refreshing…' : 'Refresh All'}
               </button>
+            </div>
+            <div className="flex items-center justify-between gap-3">
+              <div className="text-xs text-slate-400">
+                Page <span className="tabular-nums">{page}</span> / <span className="tabular-nums">{totalPages}</span> · Total <span className="tabular-nums">{total}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <select
+                  value={limit}
+                  onChange={(e) => setLimit(Number(e.target.value))}
+                  className="bg-slate-800 text-slate-100 border border-slate-700 rounded-md px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-cyan-400/40"
+                  title="Rows per page"
+                >
+                  <option value={50}>50</option>
+                  <option value={100}>100</option>
+                  <option value={200}>200</option>
+                  <option value={500}>500</option>
+                  <option value={10000}>All</option>
+                </select>
+                <button
+                  onClick={() => load({ nextPage: Math.max(1, page - 1) })}
+                  disabled={loading || page <= 1 || Number(limit) >= 10_000}
+                  className="px-3 py-1.5 rounded-md bg-slate-800 border border-slate-700 text-slate-200 disabled:opacity-50"
+                >
+                  Prev
+                </button>
+                <button
+                  onClick={() => load({ nextPage: Math.min(totalPages, page + 1) })}
+                  disabled={loading || page >= totalPages || Number(limit) >= 10_000}
+                  className="px-3 py-1.5 rounded-md bg-slate-800 border border-slate-700 text-slate-200 disabled:opacity-50"
+                >
+                  Next
+                </button>
+              </div>
             </div>
             {loading ? (
               <div className="rounded-xl border border-slate-700 bg-slate-800 p-6 text-sm text-slate-300">Loading...</div>
