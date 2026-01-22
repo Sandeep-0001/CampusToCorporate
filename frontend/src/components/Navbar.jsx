@@ -20,31 +20,31 @@ export default function Navbar() {
               Leaderboard
             </NavLink>
             <NavLink
-              to="https://contest-board.vercel.app"
+              to="https://contest.careerprep.tech"
               className={({ isActive }) => `transition-colors ${isActive ? 'text-cyan-300' : 'text-slate-300 hover:text-cyan-300'}`}
             >
               Contests
             </NavLink>
             <NavLink
-              to="https://code-analyser-beta.vercel.app"
+              to="https://codeanalyser.careerprep.tech"
               className={({ isActive }) => `transition-colors ${isActive ? 'text-cyan-300' : 'text-slate-300 hover:text-cyan-300'}`}
             >
               Code Analyser
             </NavLink>
             <NavLink
-              to="https://similar-question-search.vercel.app"
+              to="https://interviewqs.careerprep.tech"
               className={({ isActive }) => `transition-colors ${isActive ? 'text-cyan-300' : 'text-slate-300 hover:text-cyan-300'}`}
             >
               Similar Qs
             </NavLink>
             <NavLink
-              to="https://gla-notes.vercel.app"
+              to="https://notes.careerprep.tech"
               className={({ isActive }) => `transition-colors ${isActive ? 'text-cyan-300' : 'text-slate-300 hover:text-cyan-300'}`}
             >
               Notes
             </NavLink>
             <NavLink
-              to="https://companywise-sheet.vercel.app"
+              to="https://interwiew.careerprep.tech"
               className={({ isActive }) => `transition-colors ${isActive ? 'text-cyan-300' : 'text-slate-300 hover:text-cyan-300'}`}
             >
               Company Sheets

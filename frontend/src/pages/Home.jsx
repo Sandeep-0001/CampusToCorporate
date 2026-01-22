@@ -88,7 +88,7 @@ export default function Home() {
               <p className="text-slate-400">Track LeetCode performance and upcoming contests for your entire university.</p>
               <div className="flex gap-2 pt-1">
                 <NavLink to="/leaderboard" className="px-3 py-1.5 rounded-md bg-cyan-500 text-slate-950 text-[0.7rem] font-medium hover:bg-cyan-400">Leaderboard</NavLink>
-                <NavLink to="https://contest-board.vercel.app" className="px-3 py-1.5 rounded-md border border-slate-600 text-slate-100 text-[0.7rem] hover:border-cyan-400">Contests</NavLink>
+                <NavLink to="https://contest.careerprep.tech" className="px-3 py-1.5 rounded-md border border-slate-600 text-slate-100 text-[0.7rem] hover:border-cyan-400">Contests</NavLink>
               </div>
             </div>
 
@@ -97,8 +97,8 @@ export default function Home() {
               <h3 className="text-sm font-semibold text-slate-50">Resume Builder & Optimizer</h3>
               <p className="text-slate-400">Create and optimize resumes tailored for your dream job.</p>
               <div className="flex gap-2 pt-1">
-                <NavLink to="https://resumegenieai.vercel.app" className="px-3 py-1.5 rounded-md bg-emerald-500 text-slate-950 text-[0.7rem] font-medium hover:bg-emerald-400">Resume Builder</NavLink>
-                <NavLink to="https://resumegenie-ai.vercel.app" className="px-3 py-1.5 rounded-md border border-slate-600 text-slate-100 text-[0.7rem] hover:border-emerald-300">Resume Optimizer</NavLink>
+                <NavLink to="https://resumegenie.careerprep.tech" className="px-3 py-1.5 rounded-md bg-emerald-500 text-slate-950 text-[0.7rem] font-medium hover:bg-emerald-400">Resume Builder</NavLink>
+                <NavLink to="https://resumegenieai.careerprep.tech" className="px-3 py-1.5 rounded-md border border-slate-600 text-slate-100 text-[0.7rem] hover:border-emerald-300">Resume Optimizer</NavLink>
               </div>
             </div>
              <div className="rounded-xl border border-slate-600 bg-slate-800/80 p-4 space-y-2">
@@ -106,8 +106,8 @@ export default function Home() {
               <h3 className="text-sm font-semibold text-slate-50">Code Analyser & Similar Qs</h3>
               <p className="text-slate-400">Analyse code, find patterns in mistakes, and suggest similar LeetCode questions.</p>
               <div className="flex gap-2 pt-1">
-                <NavLink to="https://code-analyser-beta.vercel.app" className="px-3 py-1.5 rounded-md bg-blue-500 text-slate-950 text-[0.7rem] font-medium hover:bg-blue-400">Code Analyser</NavLink>
-                <NavLink to="https://similar-question-search.vercel.app" className="px-3 py-1.5 rounded-md border border-slate-500 text-slate-100 text-[0.7rem] hover:border-blue-300">Similar Qs</NavLink>
+                <NavLink to="https://codeanalyser.careerprep.tech" className="px-3 py-1.5 rounded-md bg-blue-500 text-slate-950 text-[0.7rem] font-medium hover:bg-blue-400">Code Analyser</NavLink>
+                <NavLink to="https://interview.careerprep.tech" className="px-3 py-1.5 rounded-md border border-slate-500 text-slate-100 text-[0.7rem] hover:border-blue-300">Similar Qs</NavLink>
               </div>
             </div>
             
