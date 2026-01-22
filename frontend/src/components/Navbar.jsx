@@ -32,7 +32,7 @@ export default function Navbar() {
               Code Analyser
             </NavLink>
             <NavLink
-              to="https://interviewqs.careerprep.tech"
+              to="https://patterns.careerprep.tech"
               className={({ isActive }) => `transition-colors ${isActive ? 'text-cyan-300' : 'text-slate-300 hover:text-cyan-300'}`}
             >
               Similar Qs
@@ -44,7 +44,7 @@ export default function Navbar() {
               Notes
             </NavLink>
             <NavLink
-              to="https://interwiew.careerprep.tech"
+              to="https://interview.careerprep.tech"
               className={({ isActive }) => `transition-colors ${isActive ? 'text-cyan-300' : 'text-slate-300 hover:text-cyan-300'}`}
             >
               Company Sheets

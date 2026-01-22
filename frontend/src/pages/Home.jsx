@@ -107,7 +107,7 @@ export default function Home() {
               <p className="text-slate-400">Analyse code, find patterns in mistakes, and suggest similar LeetCode questions.</p>
               <div className="flex gap-2 pt-1">
                 <NavLink to="https://codeanalyser.careerprep.tech" className="px-3 py-1.5 rounded-md bg-blue-500 text-slate-950 text-[0.7rem] font-medium hover:bg-blue-400">Code Analyser</NavLink>
-                <NavLink to="https://interview.careerprep.tech" className="px-3 py-1.5 rounded-md border border-slate-500 text-slate-100 text-[0.7rem] hover:border-blue-300">Similar Qs</NavLink>
+                <NavLink to="https://patterns.careerprep.tech" className="px-3 py-1.5 rounded-md border border-slate-500 text-slate-100 text-[0.7rem] hover:border-blue-300">Similar Qs</NavLink>
               </div>
             </div>
             
@@ -116,8 +116,8 @@ export default function Home() {
               <h3 className="text-sm font-semibold text-slate-50">Notes, PYQs & Company Sheets</h3>
               <p className="text-slate-400">Central library for notes, previous year questions, and company-wise preparation sheets.</p>
               <div className="flex flex-wrap gap-2 pt-1">
-                <NavLink to="https://gla-notes.vercel.app" className="px-3 py-1.5 rounded-md border  bg-amber-300 border-slate-600 text-slate-950 text-[0.7rem] hover:border-amber-300">Notes</NavLink>
-                <NavLink to="https://companywise-sheet.vercel.app" className="px-3 py-1.5 rounded-md border border-slate-600 text-slate-100 text-[0.7rem] hover:border-amber-300">Company Sheets</NavLink>
+                <NavLink to="https://notes.careerprep.tech" className="px-3 py-1.5 rounded-md border  bg-amber-300 border-slate-600 text-slate-950 text-[0.7rem] hover:border-amber-300">Notes</NavLink>
+                <NavLink to="https://interview.careerprep.tech" className="px-3 py-1.5 rounded-md border border-slate-600 text-slate-100 text-[0.7rem] hover:border-amber-300">Company Sheets</NavLink>
               </div>
             </div>
 
