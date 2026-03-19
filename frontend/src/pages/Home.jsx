@@ -21,7 +21,7 @@ export default function Home() {
             </p>
             <div className="flex flex-wrap items-center gap-4 pt-2">
               <NavLink
-                to="https://campus-to-corporate.vercel.app/leaderboard"
+                to="https://leaderboard.careerprep.tech"
                 className="inline-flex items-center justify-center rounded-md bg-cyan-500 px-4 py-2.5 text-sm font-medium text-slate-950 shadow-sm hover:bg-cyan-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900"
               >
                 View Leaderboard
@@ -54,15 +54,15 @@ export default function Home() {
               <div className="grid grid-cols-3 gap-3 text-center text-xs">
                 <div className="rounded-xl bg-slate-800/70 px-3 py-3 border border-slate-700">
                   <p className="text-slate-400 mb-1">Active Coders</p>
-                  <p className="text-2xl font-semibold text-cyan-300 tabular-nums">2.7K+</p>
+                  <p className="text-2xl font-semibold text-cyan-300 tabular-nums">3.2K+</p>
                 </div>
                 <div className="rounded-xl bg-slate-800/70 px-3 py-3 border border-slate-700">
                   <p className="text-slate-400 mb-1">Problems Solved</p>
-                  <p className="text-2xl font-semibold text-emerald-300 tabular-nums">423k+</p>
+                  <p className="text-2xl font-semibold text-emerald-300 tabular-nums">500k+</p>
                 </div>
                 <div className="rounded-xl bg-slate-800/70 px-3 py-3 border border-slate-700">
                   <p className="text-slate-400 mb-1">Contests Tracked</p>
-                  <p className="text-2xl font-semibold text-amber-300 tabular-nums">721</p>
+                  <p className="text-2xl font-semibold text-amber-300 tabular-nums">804</p>
                 </div>
               </div>
               <div className="mt-5 space-y-2 text-xs text-slate-300">
