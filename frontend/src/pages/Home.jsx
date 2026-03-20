@@ -87,7 +87,7 @@ export default function Home() {
               <h3 className="text-sm font-semibold text-slate-50">Leaderboard & Contest Board</h3>
               <p className="text-slate-400">Track LeetCode performance and upcoming contests for your entire university.</p>
               <div className="flex gap-2 pt-1">
-                <NavLink to="/leaderboard" className="px-3 py-1.5 rounded-md bg-cyan-500 text-slate-950 text-[0.7rem] font-medium hover:bg-cyan-400">Leaderboard</NavLink>
+                <NavLink to="https://leaderboard.careerprep.tech" className="px-3 py-1.5 rounded-md bg-cyan-500 text-slate-950 text-[0.7rem] font-medium hover:bg-cyan-400">Leaderboard</NavLink>
                 <NavLink to="https://contest.careerprep.tech" className="px-3 py-1.5 rounded-md border border-slate-600 text-slate-100 text-[0.7rem] hover:border-cyan-400">Contests</NavLink>
               </div>
             </div>
