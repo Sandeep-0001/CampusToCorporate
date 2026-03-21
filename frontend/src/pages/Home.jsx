@@ -54,7 +54,7 @@ export default function Home() {
               <div className="grid grid-cols-3 gap-3 text-center text-xs">
                 <div className="rounded-xl bg-slate-800/70 px-3 py-3 border border-slate-700">
                   <p className="text-slate-400 mb-1">Active Coders</p>
-                  <p className="text-2xl font-semibold text-cyan-300 tabular-nums">3.2K+</p>
+                  <p className="text-2xl font-semibold text-cyan-300 tabular-nums">3.3K+</p>
                 </div>
                 <div className="rounded-xl bg-slate-800/70 px-3 py-3 border border-slate-700">
                   <p className="text-slate-400 mb-1">Problems Solved</p>
@@ -62,7 +62,7 @@ export default function Home() {
                 </div>
                 <div className="rounded-xl bg-slate-800/70 px-3 py-3 border border-slate-700">
                   <p className="text-slate-400 mb-1">Contests Tracked</p>
-                  <p className="text-2xl font-semibold text-amber-300 tabular-nums">804</p>
+                  <p className="text-2xl font-semibold text-amber-300 tabular-nums">810</p>
                 </div>
               </div>
               <div className="mt-5 space-y-2 text-xs text-slate-300">
